@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Генератор случайных чисел</title>
+</head>
+
+<body>
+    <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="Submit" name="submit" value="Submit"/>
+    </form>
+
+    {% if submitbutton == "Submit" %}
+    <h1>leftNum {{ leftNum }}</h1>
+    <h1>rightNum {{ rightNum }}</h1>
+    <h1>countNum {{ countNum }}</h1>
+    <h1>Результат {{ rez }} </h1>
+    {% endif %}
+
+     <p><a href="{% url 'logout' %}">Log out</a></p>
+</body>
+</html>
