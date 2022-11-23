@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Генератор случайных чисел</title>
+<meta charset="utf-8" />
+<title>Генератор случайных чисел</title>
+    {% if user.is_authenticated %}
+        <p>Имя пользователя: {{ user.username }}!</p>
+      {% endif %}
 </head>
 
 <body>
-    <form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="Submit" name="submit" value="Submit"/>
-    </form>
+<form action = "" method="post">
+{% csrf_token %}
+<label for="leftNum">Левая граница: </label>
+<input id="leftNum" type="number" name="leftNum" maxlength="100" required>
+<label for="rightNum">Правая граница: </label>
+<input id="rightNum" type="number" name="rightNum" maxlength="100" required>
 
-    {% if submitbutton == "Submit" %}
-    <h1>leftNum {{ leftNum }}</h1>
-    <h1>rightNum {{ rightNum }}</h1>
-    <h1>countNum {{ countNum }}</h1>
-    <h1>Результат {{ rez }} </h1>
-    {% endif %}
+<label for="countNum">Количество чисел: </label>
+<input id="countNum" type="number" name="countNum" maxlength="100" required>
 
-     <p><a href="{% url 'logout' %}">Log out</a></p>
+<input type="Submit" name="submit" value="Генерировать"/>
+
+</form>
+
+{% if submitbutton == "Генерировать" %}
+<h1>Левая граница: {{leftNum}}</h1>
+<h1>Правая граница: {{ rightNum }}</h1>
+<h1>Количество чисел: {{ countNum }}</h1>
+<h1>Результат: {{ rez }} </h1>
+
+{% endif %}
+
+<p><a href="{% url 'logout' %}">Выйти</a></p>
 </body>
 </html>

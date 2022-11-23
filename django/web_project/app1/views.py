@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-import numpy as np
-from .forms import LoginForm, RandNum
+from .forms import LoginForm, RandNum, UserRegistrationForm
 from django.urls import reverse
 
 from django.shortcuts import *
@@ -21,79 +20,43 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
 
-
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
-'''
-
-def reg(request):
-    return HttpResponse('<h1>Генератор случайных чисел</h1>')
 
 
 
-def guests(request):
-       
-        error = ''
-        if request.method == 'POST':
-           form = RegistrationForm(request.POST)
-           if form.is_valid():
-                form.save()
-           else:
-                error = 'Ошибка'
-        form = RegistrationForm()
-        data = {
-            'form': form,
-            'error': error
-        }
-        return render(request, 'guests.html', data)
 
-'''
-
-
-'''
-def user_login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(data = request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-          #  return redirect('login')
-    else:
-        form=UserLoginForm()
-    return render(request, 'login.html', {"form": form})
-
-'''
 
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(username=cd['username'], password=cd['password'])
+            user = authenticate(username='username', password='password')
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return redirect('/randomizer/')
                 else:
                     return render(request,
-                          'account/disabled_password.html')
+                    'account/disabled_password.html')
             else:
                 return render(request,
-                          'account/disabled_password.html')
+                'account/disabled_password.html')
     else:
         form = LoginForm()
     return render(request, 'account/login.html', {'form': form})
 
-
 def get_num(request):
     submitbutton = request.POST.get("submit")
 
-    leftNum = ''
-    rightNum = ''
-    countNum = ''
+    leftNum = 0
+    rightNum = 0
+    countNum = 0
+
     rand_list=[]
     rez=''
 
@@ -102,22 +65,32 @@ def get_num(request):
         leftNum = form.cleaned_data.get("leftNum")
         rightNum = form.cleaned_data.get("rightNum")
         countNum = form.cleaned_data.get("countNum")
-
         for i in range(countNum):
             rand_list.append(randint(leftNum, rightNum))
             rez+=str(rand_list[i])
-            rez+=" "
+            if (i!=countNum-1):
+                rez += ","
+                rez+=" "
 
-      #  rez = rand_list
-        #rez = {"rand_list": rand_list}
-
-    context = {'form': RandNum, 'leftNum': leftNum,
-               'rightNum': rightNum, 'submitbutton': submitbutton,
-               'countNum': countNum, 'rez': rez}
-
-
+    context = {'leftNum': leftNum, 'rightNum': rightNum, 'countNum': countNum, 'submitbutton': submitbutton,
+    'rez': rez, 'form': RandNum}
 
     return render(request, 'randomizer.html', context)
 
 
 
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+
+            new_user = user_form.save(commit=False)
+
+            new_user.set_password(user_form.cleaned_data['password'])
+
+            new_user.save()
+
+            return redirect('http://127.0.0.1:8000/app1/accounts/login/')
+    else:
+        user_form = UserRegistrationForm()
+    return render(request, 'register.html', {'user_form': user_form})

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app1.apps.App1Config',
     'django.contrib.sites',
-    'account'
+    'account',
+
     #'accounts.apps.AccountsConfig',
 
 ]

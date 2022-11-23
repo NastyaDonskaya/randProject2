@@ -1,20 +1,11 @@
 
-
-{% block title %}
-<h1>Регистрация</h1>
-{% endblock %}
-
-
+{% block title %}Регестрация пользователя{% endblock %}
 
 {% block content %}
 
-
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-     <button type="submit" class = "btn btn-success">Зарегистрироваться</button>
-
-</form>
-
+    <form action="." method="post">
+        {{ user_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Зарегестрироваться"></p>
+    </form>
 {% endblock %}
