@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 from .forms import LoginForm, RandNum, UserRegistrationForm
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 from django.shortcuts import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -12,6 +12,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from .models import Numbers
 #from .forms import ContactForm
 #from config.settings import RECIPIENTS_EMAIL, DEFAULT_FROM_EMAIL
 from random import randint
@@ -57,6 +58,7 @@ def get_num(request):
     rightNum = 0
     countNum = 0
 
+
     rand_list=[]
     rez=''
 
@@ -65,17 +67,23 @@ def get_num(request):
         leftNum = form.cleaned_data.get("leftNum")
         rightNum = form.cleaned_data.get("rightNum")
         countNum = form.cleaned_data.get("countNum")
+        if leftNum>rightNum:
+            return redirect('error1')
         for i in range(countNum):
             rand_list.append(randint(leftNum, rightNum))
             rez+=str(rand_list[i])
             if (i!=countNum-1):
                 rez += ","
                 rez+=" "
-
+    Numbers.objects.create(user_name=request.user.username, left_num=leftNum, right_num=rightNum,
+    count_num=countNum, rand_num = rez)
     context = {'leftNum': leftNum, 'rightNum': rightNum, 'countNum': countNum, 'submitbutton': submitbutton,
     'rez': rez, 'form': RandNum}
 
     return render(request, 'randomizer.html', context)
+
+
+
 
 
 
@@ -94,3 +102,14 @@ def register(request):
     else:
         user_form = UserRegistrationForm()
     return render(request, 'register.html', {'user_form': user_form})
+
+
+def error(request):
+    return render(request, "error1.html")
+
+def history(request):
+    context  = {
+            'numbers': Numbers.objects.filter(user_name=request.user.username)
+        }
+
+    return render(request, 'history.html', context)

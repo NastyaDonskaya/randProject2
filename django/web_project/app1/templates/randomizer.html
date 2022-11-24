@@ -5,6 +5,7 @@
 <title>Генератор случайных чисел</title>
     {% if user.is_authenticated %}
         <p>Имя пользователя: {{ user.username }}!</p>
+        <p><a href="{% url 'history' %}">Прошлые генерации</a></p>
       {% endif %}
 </head>
 
@@ -24,6 +25,7 @@
 </form>
 
 {% if submitbutton == "Генерировать" %}
+
 <h1>Левая граница: {{leftNum}}</h1>
 <h1>Правая граница: {{ rightNum }}</h1>
 <h1>Количество чисел: {{ countNum }}</h1>
