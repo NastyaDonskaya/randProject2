@@ -75,8 +75,9 @@ def get_num(request):
             if (i!=countNum-1):
                 rez += ","
                 rez+=" "
-    Numbers.objects.create(user_name=request.user.username, left_num=leftNum, right_num=rightNum,
-    count_num=countNum, rand_num = rez)
+    if (countNum!=0):
+        Numbers.objects.create(user_name=request.user.username, left_num=leftNum, right_num=rightNum,
+        count_num=countNum, rand_num = rez)
     context = {'leftNum': leftNum, 'rightNum': rightNum, 'countNum': countNum, 'submitbutton': submitbutton,
     'rez': rez, 'form': RandNum}
 
